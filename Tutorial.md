@@ -266,3 +266,261 @@ The results.
 [rendering_users_view.png]
 
 ## Passing data to our views
+
+Passing data to our views is quite simple. We pass our data as an array as the second argument of your
+view function.
+
+In the `UsersController.php` we can see this below
+
+```php
+public function show(){
+    return View("users",['title'=>'Hello World']);
+}
+```
+
+Now in our `users.blade.php` we have access to `$title`.
+
+```html
+<h1>{{ $title  }}</h1>
+<p>The title is passed from the controller</p>
+```
+
+The result is shown below.
+
+[passing_data.png]
+
+### An alternative way
+
+We can also pass data using the `with` function on the view. Lets see how.
+
+```php
+public function show(){
+    return View("users")->with('title','Another Hello World');
+}
+```
+
+This works the same and gives the same results.
+
+# Layouts
+
+We are using `blade` so we can use blade features to manage our layouts. Let's see how and what we can do with 
+this.
+
+First we create a new layout. In our `resources/views/layouts` directory. 
+We create a file called `main.blade.php` and we add the code below.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div style="margin: 0 auto; border: 1px solid #ccc; padding:5px;">
+    @yield('content')
+</div>
+</body>
+</html>
+```
+
+Using `@yield()` is where we can pass content into when we extend views using this layout.
+Let's try that. In `users.blade.php` we extend this layout.
+
+```html
+@extends('layouts.main')
+
+@section('content')
+<h1>{{ $title  }}</h1>
+<p>The title is passed from the controller</p>
+@endsection
+```
+
+Now when we run our app we can see how the page changed.
+
+[extending_layouts.png]
+
+## Working with variables
+
+Let's change the title of the page from our view. 
+First in our `main.blade.php` file we try to get the variable using
+
+```html
+<title>App Name - @yield('title')</title>
+```
+
+So if `title` exits it will show as the title of the page.
+
+Next in our `users.blade.php` layout we create this variable.
+
+```html
+@section('title',"My Users")
+```
+
+So our title should display **My Users**. Let's see the results below.
+
+[title_in_layout.png]
+
+
+# Control Structures
+
+Let's try working with some conditionals. We will pass some data and display content based on where it exits
+or not.
+
+Let's modify our `UsersController.php`. We update the `show` function like below
+
+```php
+public function show(){
+    return View("users",['title'=>'Hello World','show'=>false]);
+}
+```
+
+So we are passing a variable called `show`. It can be either `true` or `false`.
+Now in our `users.blade.php` file we check to see if exits.
+
+```html
+@section('content')
+<h1>{{ $title  }}</h1>
+@if($show == true)
+    <p>The title is passed from the controller</p>
+@endif
+@endsection
+```
+
+If it is true we will display our `p` element. Currently it is false so our output will be.
+
+[conditionals.png]
+
+## For loops
+
+Lets for fun try out a for loop to see how we can do this. In our `users.blade.php` we add the content
+below.
+
+```html
+@section('content')
+<h1>{{ $title  }}</h1>
+@if($show == true)
+    <p>The title is passed from the controller</p>
+    <ul>
+        @for ($i = 0; $i < 10; $i++)
+            <li>The current value is item: {{ $i }} </li>
+        @endfor
+    </ul>
+@endif
+@endsection
+```
+
+The results can be seen below.
+
+[for_loop_example.png]
+
+# Working with the database
+
+First we create our database. For this we use MYSQL workbench.
+
+[creating_database.png]
+
+Now lets head to `config/database.php` in your Laravel app.
+
+[database_configuration.png]
+
+We update our configurations as shown above. 
+
+In our `.env` file we add our database name.
+
+[env_file_sample.png]
+
+Next we create a new function called `test` in our `UsersController.php` and we create a new route for it.
+
+```php
+Route::get('/users/test', 'UsersController@test');
+```
+
+Now lets get started working with our database. In our `UsersController.php` we want to use the class `DB`.
+
+```php
+use Illuminate\Support\Facades\DB;
+```
+
+Now we can use the `DB` class. Let's add our `test` function code.
+
+```php
+public function test(){
+    $users = DB::select('select * from users limit ?', [100]);
+    foreach($users as $user){
+      echo $user->firstname . " " . $user->lastname . '<br>';
+    }
+}
+```
+
+Using the `DB` class we call select. Then we loop through the results.
+We can see what this looks like below.
+
+[list_of_users.png]
+
+## Using the query builder
+
+We can retrieve data from our database using a query builder format. Lets see how below.
+Check out this code here
+
+```php
+DB::table('users')->get();
+```
+
+This gives us the same result that we had before. Check out the full code below
+
+```php
+public function test(){
+    $users = DB::table('users')->get();
+    foreach($users as $user){
+      echo $user->firstname . " " . $user->lastname . '<br>';
+    }
+}
+```
+
+This gives us the same result. Well there is not limit. It will pull all your data.
+
+## Find by primary key
+
+Let pull a record by the id.
+
+```php
+public function test(){
+    $user = DB::table('users')->find(10);
+    echo $user->firstname . " " . $user->lastname . '<br>';
+}
+```
+
+Its that simple.
+
+## Getting the first row
+
+Lets get the first row from a query.
+
+```php
+public function test(){
+    $user = DB::table('users')->get()->first();
+    echo $user->firstname . " " . $user->lastname . '<br>';
+}
+```
+
+## Using the where query
+
+Lets try to get an email from a user row.
+
+```php
+public function test(){
+    $email = DB::table('users')->where('firstname', 'Cchaddie')->value('email');
+    echo $email . '<br>';
+}
+```
+
+We can look at the database to understand the data.
+
+[email_users_dataview.png]
+
+There are alot more things you can do. Check out the link [here](https://laravel.com/docs/7.x/queries).
+
+
+
+

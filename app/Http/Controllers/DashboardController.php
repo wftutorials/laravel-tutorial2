@@ -7,6 +7,6 @@ namespace App\Http\Controllers;
 class DashboardController extends Controller
 {
     public function index(){
-        return "this is the dashboard controller";
+        return view('dashboard.index');
     }
 }

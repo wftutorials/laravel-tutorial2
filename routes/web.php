@@ -67,3 +67,5 @@ Route::get('/admin', function () {
 // Users Routes
 Route::get('/users/show', 'UsersController@show');
 Route::get('/users/test', 'UsersController@test');
+
+Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create');

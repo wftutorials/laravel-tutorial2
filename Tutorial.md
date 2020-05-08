@@ -522,5 +522,231 @@ We can look at the database to understand the data.
 There are alot more things you can do. Check out the link [here](https://laravel.com/docs/7.x/queries).
 
 
+# Migrations
+
+We can create tables via the command line in Laravel using migrations. Lets see how.
+
+First we run the following command.
+
+```bash
+php artisan make:migration create_post_table
+```
+
+Migrations are saved in the `databasee/migrations` folder.
+
+[creating_migrations.png]
+
+When we enter the file we can create the structure of the table
+within in the up function.
+
+```php
+public function up()
+{
+    Schema::create('post', function (Blueprint $table) {
+        $table->id();
+        $table->string("title");
+        $table->string("description");
+        $table->string("Category");
+        $table->timestamps();
+    });
+}
+```
+
+Above we added a title, description and category to our table. Lets run this to see what happens.
+
+Run the migration using the command
+
+```bash
+php artisan migrate
+```
+
+This will run any outstanding migrations. 
+
+[post_table_created.png]
+
+Above you can see our created post table.
+
+You can learn more about migrations [here](https://laravel.com/docs/7.x/migrations).
+
+# Working with models
+
+To work with models we use Eloquent. Learn more about eloquent here.
+We run the command
+
+```bash
+php artisan make:model Post
+```
+
+Our model is created in the `app` directory.
+
+```php
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    //
+}
+```
+
+We add the table name to avoid conflicts
+
+```php
+<?php
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Post extends Model
+{
+    //
+    protected $table = "post";
+}
+```
+
+## Retreiving data using models
+
+Lets get our posts. In our database we add some random data.
+
+[posts_random_data.png]
+
+Now in our `DashboardController.php` we get all the posts and display it.
+
+
+```php
+class DashboardController extends Controller
+{
+    public function index(){
+        $posts = Post::all();
+        foreach($posts as $post){
+            echo $post->title ."<br>";
+        }
+    }
+}
+```
+
+The results is shown below.
+
+[showing_posts_displayed.png]
+
+
+Learn more [here](https://laravel.com/docs/7.x/eloquent).
+
+# Working with forms
+
+Lets get started submitting a form. First we go to our `web.php` and add our route.
+
+```php
+Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create');
+```
+
+Above we use the `Route::match()` function.
+
+Next we create a view in dashboard called `create.blade.php`.
+
+```html
+<h1>Create a new Post</h1>
+<form method="POST" action="/dashboard/create">
+    @csrf
+    Post Title: <input type="text" name="title" /><br><br>
+    Post Description: <br><textarea name="description" cols="30" rows="3"></textarea>
+    <br><br>
+
+    <button type="submit">Submit</button>
+</form>
+```
+
+Note our `@csrf` for Cross-Site Request Forgery protection.
+
+In our `DashboardController.php` we add some stuff.
+
+We need to user the `Request` object first.
+
+```php
+use Illuminate\Http\Request;
+```
+
+Then we can create our function.
+
+```php
+public function create(Request $request){
+    if($request->isMethod('post')){
+        $postTitle = $request->input('title');
+        $postDescription = $request->input("description");
+        echo $postTitle . "<br>" . $postDescription;
+        return false;
+    }
+    return View("dashboard.create");
+}
+```
+
+
+The results is show below.
+
+[submitting_a_form.gif]
+
+
+Learn more [here](https://laravel.com/docs/7.x/blade#forms).
+
+## Saving using the model
+
+First we update our `Post.php` so we can use it better. We add some cool comments for our
+intellsense.
+
+```php
+<?php
+
+
+namespace App;
+
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property string $title
+ * @property string $description
+ * @property string $category
+ */
+class Post extends Model
+{
+    //
+    protected $table = "post";
+
+    protected $attributes = [
+
+    ];
+}
+```
+
+The `@property` comments allows us to set our object without getting warning messages in our ide.
+
+Then in our dashboard controller we change the `create` function.
+
+```php
+public function create(Request $request){
+    if($request->isMethod('post')){
+        $post = new Post();
+        $post->title = $request->input('title');
+        $post->description = $request->input("description");
+        $post->category = "general";
+        $post->save();
+        echo  "POST saved";
+        return false;
+    }
+    return View("dashboard.create");
+}
+```
+
+Thats it. When we enter information in our form. Our Post should b added to the database.
+
+
+[entering_form_data.png]
+
+[inserted_in_the_database.png]
+
+Learn more about using models [here](https://laravel.com/docs/7.x/eloquent).
 
 

@@ -68,4 +68,12 @@ Route::get('/admin', function () {
 Route::get('/users/show', 'UsersController@show');
 Route::get('/users/test', 'UsersController@test');
 
-Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create');
+Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create')
+->middleware('auth');
+
+Route::get('/dashboard/home', 'DashboardController@home');
+Route::get('/dashboard/help', 'DashboardController@help');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

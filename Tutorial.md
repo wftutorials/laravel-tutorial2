@@ -749,4 +749,181 @@ Thats it. When we enter information in our form. Our Post should b added to the 
 
 Learn more about using models [here](https://laravel.com/docs/7.x/eloquent).
 
+# Working with assets
 
+When working with assets Laravel has a lot of options for us to choose from. But we will kepp it simple.
+Head to the public folder and create a file called `primary.css`.
+
+Enter some css into it as shown below.
+
+```css
+.header {
+    font-size: 20px;
+    color:darkblue;
+}
+
+.subtitle {
+    font-style: italic;
+    text-underline: #1b1e21;
+    font-weight: bold;
+}
+
+```
+
+Now we create a new route to test your style in. 
+How route name is `dashboard/home`.
+
+```php
+// web.php
+Route::get('/dashboard/home', 'DashboardController@home');
+```
+
+Create our function
+
+```php
+// DashboardController.php
+
+public function home(){
+    return View("dashboard.home");
+}
+```
+
+Now we add our `primary.css` in our `home.blade.php` view.
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App Name</title>
+    <link href="{{ asset('primary.css') }}" rel="stylesheet" />
+</head>
+<body>
+<div style="margin: 0 auto; border: 1px solid #ccc; padding:5px;">
+    <h1 class="header">Welcome to the home page</h1>
+    <p class="subtitle">This is the home page</p>
+</div>
+</body>
+</html>
+```
+
+Of special mention is this link
+
+```html
+<link href="{{ asset('primary.css') }}" rel="stylesheet" />
+```
+
+This is how you add an external sytyle cheat. You can create a css folder if you want. Only the path will chnage
+
+```html
+<link href="{{ asset('css/primary.css') }}" rel="stylesheet" />
+```
+
+The results can be seen below. Our `header` and `subtitle` elements are shown with styling.
+
+[adding_a_stylesheet.png]
+
+## Adding javascript files
+
+Lets try to add javascript files to our app.
+In our public folder we create the `main.js` file. We add the code below.
+
+```javascript
+window.onload = function() {
+    document.getElementById("Save").onclick = function fun() {
+        alert("hello");
+
+    }
+}
+```
+
+Next we create our view called `help.blade.php`.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>App Name</title>
+    <script type="text/javascript" src="{{ asset('main.js') }}"></script>
+</head>
+<body>
+<div style="margin: 0 auto; border: 1px solid #ccc; padding:5px;">
+    <h1>Help Page</h1>
+    <button id="Save">Button</button>
+</div>
+</body>
+</html>
+```
+
+Notice we add our script using the same `asset` function.
+
+Thats all we need we should be good to go. The results is shown below.s
+
+[add_js_assets.gif]
+
+
+# User authentication
+
+To get started with authentication we use Laravel suggested method.
+So we need to run some commands. Learn more [here](https://laravel.com/docs/7.x/authentication).
+
+First we run some composer commands
+
+```bash
+composer require laravel/ui
+
+php artisan ui vue --auth
+```
+
+Now if we didn't run `npm install` we do this now.
+
+```bash
+npm install
+```
+
+Then we run the `dev` scripts
+
+```bash
+npm run dev
+```
+
+Doing all of this adds authentication to our app. When we are complete run the app
+and head to `http://127.0.0.1:8000/login`. We will see an awesome login page.
+
+[login_view.png]
+
+## Creating a user
+
+To create a new user lets head to the registration page. Via `http://127.0.0.1:8000/register`.
+Enter you new user information
+
+[register_user.png]
+
+Once thats complete we would have created a new user. Lets check the database to see it.
+
+[user_in_database]
+
+## Protected Routes
+
+Lets protect a route. We will user the create a post route.
+
+```php
+Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create')
+->middleware('auth');
+```
+
+We attach the `auth` middleware to our function. This means you need to be logged in to access this route.
+
+We can see this in action below.
+
+[protecting_a_route.gif]
+
+# Conclusion
+
+Here ends our beginner introduction into the Laravel framework. There is alot more to dive into. 
+But we will stop here for now. You should have the basics to get up and running. Be sure to check out
+the documents as they are pretty good and that's what I used to guide me.
+
+There are alot more beginner tutorials on this site with awesome pictures. Be sure to check them out.

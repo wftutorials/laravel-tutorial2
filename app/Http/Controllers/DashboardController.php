@@ -27,4 +27,12 @@ class DashboardController extends Controller
         }
         return View("dashboard.create");
     }
+
+    public function home(){
+        return View("dashboard.home");
+    }
+
+    public function help(){
+        return View("dashboard.help");
+    }
 }

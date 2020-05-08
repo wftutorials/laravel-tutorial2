@@ -1,0 +1,10 @@
+.header {
+    font-size: 20px;
+    color:darkblue;
+}
+
+.subtitle {
+    font-style: italic;
+    text-underline: #1b1e21;
+    font-weight: bold;
+}

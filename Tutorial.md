@@ -306,8 +306,9 @@ This works the same and gives the same results.
 
 # Layouts
 
-We are using `blade` so we can use blade features to manage our layouts. Let's see how and what we can do with 
-this.
+We are using `blade` so we can use blade features to manage our layouts. 
+Let's see how and what we can do with this.
+Learn more [here](https://laravel.com/docs/7.x/blade).
 
 First we create a new layout. In our `resources/views/layouts` directory. 
 We create a file called `main.blade.php` and we add the code below.
@@ -328,7 +329,7 @@ We create a file called `main.blade.php` and we add the code below.
 ```
 
 Using `@yield()` is where we can pass content into when we extend views using this layout.
-Let's try that. In `users.blade.php` we extend this layout.
+Let's try that. In `users.blade.php` we extend the layout usings `layouts.main`.
 
 ```html
 @extends('layouts.main')
@@ -339,7 +340,7 @@ Let's try that. In `users.blade.php` we extend this layout.
 @endsection
 ```
 
-Now when we run our app we can see how the page changed.
+Now when we run our app we can see how the page has changed.
 
 [extending_layouts.png]
 
@@ -360,17 +361,18 @@ Next in our `users.blade.php` layout we create this variable.
 @section('title',"My Users")
 ```
 
-So our title should display **My Users**. Let's see the results below.
+So our title should display `My Users`. Let's see the results below.
 
 [title_in_layout.png]
 
 
 # Control Structures
 
-Let's try working with some conditionals. We will pass some data and display content based on where it exits
-or not.
+Let's try working with some control structures. 
+We will pass some data and display content based on whether it exists or not.
 
-Let's modify our `UsersController.php`. We update the `show` function like below
+Let's modify our `UsersController.php` to do this. 
+We first update the `show` function as shown below
 
 ```php
 public function show(){
@@ -396,7 +398,7 @@ If it is true we will display our `p` element. Currently it is false so our outp
 
 ## For loops
 
-Lets for fun try out a for loop to see how we can do this. In our `users.blade.php` we add the content
+Lets try out a for loop to see how we can do this. In our `users.blade.php` we add the content
 below.
 
 ```html
@@ -457,6 +459,7 @@ public function test(){
 ```
 
 Using the `DB` class we call select. Then we loop through the results.
+
 We can see what this looks like below.
 
 [list_of_users.png]
@@ -464,7 +467,8 @@ We can see what this looks like below.
 ## Using the query builder
 
 We can retrieve data from our database using a query builder format. Lets see how below.
-Check out this code here
+
+Check out this code here:
 
 ```php
 DB::table('users')->get();
@@ -481,7 +485,7 @@ public function test(){
 }
 ```
 
-This gives us the same result. Well there is not limit. It will pull all your data.
+This gives us the same result except there is not limit. It will pull all your data.
 
 ## Find by primary key
 
@@ -540,7 +544,7 @@ Migrations are saved in the `databasee/migrations` folder.
 [creating_migrations.png]
 
 When we enter the file we can create the structure of the table
-within in the up function.
+within the up function.
 
 ```php
 public function up()
@@ -573,8 +577,8 @@ You can learn more about migrations [here](https://laravel.com/docs/7.x/migratio
 
 # Working with models
 
-To work with models we use Eloquent. Learn more about eloquent here.
-We run the command
+To work with models we use Eloquent. Learn more about eloquent [here](https://laravel.com/docs/7.x/eloquent).
+We run the command below
 
 ```bash
 php artisan make:model Post
@@ -647,7 +651,7 @@ Lets get started submitting a form. First we go to our `web.php` and add our rou
 Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create');
 ```
 
-Above we use the `Route::match()` function.
+Above we use the `Route::match()` function so we can accept both `GET` and `POST` requests.
 
 Next we create a view in dashboard called `create.blade.php`.
 
@@ -663,17 +667,18 @@ Next we create a view in dashboard called `create.blade.php`.
 </form>
 ```
 
-Note our `@csrf` for Cross-Site Request Forgery protection.
+Note our `@csrf` for Cross-Site Request Forgery protection. 
+You can learn more about that [here](https://laravel.com/docs/7.x/csrf)
 
-In our `DashboardController.php` we add some stuff.
+In our `DashboardController.php` we add some more stuff.
 
-We need to user the `Request` object first.
+We need to use the `Request` object so we add that like
 
 ```php
 use Illuminate\Http\Request;
 ```
 
-Then we can create our function.
+Then we can create our function to accept our requests.
 
 ```php
 public function create(Request $request){
@@ -688,17 +693,16 @@ public function create(Request $request){
 ```
 
 
-The results is show below.
+The results are show below.
 
 [submitting_a_form.gif]
 
-
-Learn more [here](https://laravel.com/docs/7.x/blade#forms).
+For more information check out the link [here](https://laravel.com/docs/7.x/blade#forms).
 
 ## Saving using the model
 
 First we update our `Post.php` so we can use it better. We add some cool comments for our
-intellsense.
+intellisense.
 
 ```php
 <?php
@@ -726,7 +730,7 @@ class Post extends Model
 
 The `@property` comments allows us to set our object without getting warning messages in our ide.
 
-Then in our dashboard controller we change the `create` function.
+Then in our dashboard controller we change the `create` function to:
 
 ```php
 public function create(Request $request){
@@ -743,7 +747,8 @@ public function create(Request $request){
 }
 ```
 
-Thats it. When we enter information in our form. Our Post should b added to the database.
+Thats it. When we enter information in our form. Our Posts should be added to the database.
+As shown in the pictures below.
 
 
 [entering_form_data.png]
@@ -754,7 +759,7 @@ Learn more about using models [here](https://laravel.com/docs/7.x/eloquent).
 
 # Working with assets
 
-When working with assets Laravel has a lot of options for us to choose from. But we will kepp it simple.
+When working with assets Laravel has a lot of options for us to choose from. But we will keep it simple.
 Head to the public folder and create a file called `primary.css`.
 
 Enter some css into it as shown below.
@@ -773,8 +778,8 @@ Enter some css into it as shown below.
 
 ```
 
-Now we create a new route to test your style in. 
-How route name is `dashboard/home`.
+Now we create a new route to test your styling in it. 
+The new route name is `dashboard/home`.
 
 ```php
 // web.php
@@ -811,13 +816,14 @@ Now we add our `primary.css` in our `home.blade.php` view.
 </html>
 ```
 
-Of special mention is this link
+Of special mention is the `asset` function
 
 ```html
 <link href="{{ asset('primary.css') }}" rel="stylesheet" />
 ```
 
-This is how you add an external sytyle cheat. You can create a css folder if you want. Only the path will chnage
+This is how you add an external stylesheet. You can create a css folder if you want. Only the path will change
+as shown below.
 
 ```html
 <link href="{{ asset('css/primary.css') }}" rel="stylesheet" />
@@ -862,7 +868,7 @@ Next we create our view called `help.blade.php`.
 
 Notice we add our script using the same `asset` function.
 
-Thats all we need we should be good to go. The results is shown below.s
+That's all we need we should be good to go. The results is shown below.
 
 [add_js_assets.gif]
 
@@ -870,7 +876,7 @@ Thats all we need we should be good to go. The results is shown below.s
 # User authentication
 
 To get started with authentication we use Laravel suggested method.
-So we need to run some commands. Learn more [here](https://laravel.com/docs/7.x/authentication).
+So we need to run some commands. Learn more about it [here](https://laravel.com/docs/7.x/authentication).
 
 First we run some composer commands
 
@@ -886,7 +892,7 @@ Now if we didn't run `npm install` we do this now.
 npm install
 ```
 
-Then we run the `dev` scripts
+Then we run the `dev` scripts command
 
 ```bash
 npm run dev
@@ -900,17 +906,17 @@ and head to `http://127.0.0.1:8000/login`. We will see an awesome login page.
 ## Creating a user
 
 To create a new user lets head to the registration page. Via `http://127.0.0.1:8000/register`.
-Enter you new user information
+Enter you new user information.
 
 [register_user.png]
 
-Once thats complete we would have created a new user. Lets check the database to see it.
+Once that's complete we would have created a new user. Lets check in the database to see it.
 
 [user_in_database]
 
 ## Protected Routes
 
-Lets protect a route. We will user the create a post route.
+Let's protect a route. We will user the *create a post* route.
 
 ```php
 Route::match(['get', 'post'],'/dashboard/create', 'DashboardController@create')

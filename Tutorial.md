@@ -1,32 +1,33 @@
 # Getting started with building applications with Laravel
 
-In this tutorial we look at how we can create web applications with Laravel.
-To learn more about Laravel we can check out their website [here](https://laravel.com/).
+In this tutorial we look at how we can create web applications with Laravel. Using the version 7.x.
+To learn more about Laravel we can check out their website [here](https://laravel.com/) and the
+documentation [here](https://laravel.com/docs/7.x).
 
 # Things you need
 
 Some of the things you need to get started are:
 * Composer
 * PHP
-* XAMPP maybe but not required.
+* Node
 
 # Installation
 
-To install Laravel we can use composer
+To install Laravel we can use composer. You can download composer [here](https://getcomposer.org/download/).
 
 ```bash
 composer create-project laravel/laravel {directory}
 ```
 
-Once you run the command above. You can crate your application. We ran the command below
+Once you run the command above. You can create your application. We ran the command below
 
 ```bash
 composer create-project laravel/laravel laraveltuts
 ```
 
-You can view our tutorial [here](https://github.com/wftutorials/laravel-tutorial2).
+You can view our tutorial [here](https://github.com/wftutorials/laravel-tutorial2) for future reference.
 
-To run your application you can use the command below
+To run your application you can use the command below. This starts the server.
 
 ```bash
 php artisan serve
@@ -44,7 +45,8 @@ To learn more you can check out the documents [here](https://laravel.com/docs/7.
 # Hello world
 
 Lets create our common hello world application.
-Head to the `web.php` in your `routes` directory.
+Head to the `web.php` in your `routes` directory. 
+This holds all the routes for your application.
 
 Lets create a new route called `helloworld`.
 
@@ -54,13 +56,14 @@ Route::get('/helloworld', function () {
 });
 ```
 
-The results as seen below.
+The results are seen below.
 
 [hello_world.png]
 
 # Routing
 
-Routing is how we control where our application goes. Let see what kind of routes we can create.
+Routing is how we control where our application goes via the url.
+Let see what kind of routes we can create.
 
 Lets create a help route. We made a route like this before.
 
@@ -76,7 +79,7 @@ Results is shown below.
 
 ## Parameters
 
-Lets pass parameters via our url to our route function.
+Lets pass parameters via our url and access it in our route function.
 
 ```php
 Route::get('/posts/{id}', function ($id) {
@@ -98,13 +101,13 @@ Route::get('/notes/{id}/{page}', function ($id, $page) {
 });
 ```
 
-The results is shown below.
+The results are shown below.
 
 [multiple_parameters.png]
 
 ## Using the GET super variable
 
-We can still access the super global and use it as we see necessary.
+We can still access the super globals and use it as we see necessary.
 
 ```php
 Route::get('/book', function () {
@@ -116,7 +119,7 @@ Route::get('/book', function () {
 });
 ```
 
-The results is shown below.
+The result is shown below.
 
 [route_super_global.png]
 
@@ -138,7 +141,7 @@ Route::post('/create', function(){
 
 ## Working with Controller routes
 
-We will get into controller further but for now we create a `DashboardController.php`.
+We will get into controllers further but for now we create a `DashboardController.php`.
 We create it in the `Http/Controllers` directory.
 
 ```php
@@ -162,7 +165,7 @@ Now we can reference that function.
 Route::get('/dashboard', 'DashboardController@index');
 ```
 
-So we can test this.
+So we can test this as shown below.
 
 [dashboard_controller.png]
 
@@ -181,14 +184,14 @@ Route::get('/login', function () {
 Route::redirect('/home', '/login');
 ```
 
-The results is shown below.
+The result is shown below.
 
 [testing_redirection.gif]
 
 ## Redirecting to another route
 
 Let's try to redirect from a route to another route.
-In your `web.php` we add the below
+In your `web.php` we add the code below
 
 ```php
 Route::get('/admin', function () {
@@ -196,7 +199,7 @@ Route::get('/admin', function () {
 });
 ```
 
-This means when we head to the admin route we should be redirected to the
+This means when we head to the `admin` route we should be redirected to the
 **help** route.
 
 Let's test this out.
@@ -244,16 +247,16 @@ Now we can test the route.
 
 ## Rendering Views
 
-Lets see how we can render a view. head to the `resoures/views` folder and create a file called
+Let's see how we can render a view. Head to the `resoures/views` folder and create a file called
 `users.blade.php`.
 
-In this file we place a `h1` element.
+In this file we place a header `h1` element.
 
 ```html
 <h1>Showing all users</h1>
 ```
 
-Now in our `UsersController.php` we return our view.
+Now in our `UsersController.php` we return our view as shown below.
 
 ```php
 public function show(){
@@ -261,7 +264,7 @@ public function show(){
 }
 ```
 
-The results.
+The results is in the picture below.
 
 [rendering_users_view.png]
 
@@ -278,7 +281,7 @@ public function show(){
 }
 ```
 
-Now in our `users.blade.php` we have access to `$title`.
+Now in our `users.blade.php` we have access to `$title` variable.
 
 ```html
 <h1>{{ $title  }}</h1>
